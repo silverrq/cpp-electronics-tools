@@ -22,23 +22,62 @@ void turkce() {
     #endif
 }
 
+void ekrantemizle()  {
+    for(int i= 0; i<50; i++) {
 
-// Metin karakter karakter yazdıran ve her karakter arasında gecikme ekleyen fonksiyon
-void YavasYaz(const string& text, int delay_ms = 25)  {
+        cout << "\n";
+    }
+} // Ekranı temizleme fonksiyonu
+
+void YavasYaz(const string& text, int delay_ms = 25)  {  // Varsayılan gecikme 25 ms
         for (char karakter: text) {
             cout << karakter << flush; // Karakteri yazdır
             this_thread::sleep_for(chrono::milliseconds(delay_ms)); // Gecikme
         }
-    }
+    } // Yavaş yazma efekti fonksiyonu
+
+void enterBekle()  {
+    char input;
+    bool validinput = false;
+
+    do {
+        input = cin.get();
+
+        if (input == '\n') {
+            validinput = true;
+        }else {
+            YavasYaz("\nLutfen sadece enter tusuna basiniz.\n");
+            cin.ignore(1000, '\n'); // Geçersiz girişleri temizle
+        }
+    } while (!validinput);
+} // Enter tuşuna basılmasını bekleyen fonksiyon
+
+void bekle(int milisaniye = 1000) {
+    this_thread::sleep_for(chrono::milliseconds(milisaniye));
+}
 
 int main() {
 
-    turkce();
-    
+    turkce(); // Türkçe karakter desteği için fonksiyonu çağır
+    ekrantemizle(); //başlangıçta ekranı temizle
+
     //Başlangıç mesajı
-    YavasYaz("Resistor Calculator'a Hoşgeldiniz!");
-    Sleep(1000);
-    YavasYaz("Giriş yapmak için enter tuşuna basınız.");
+    YavasYaz("Resistor Calculator'a Hoşgeldiniz!\n");
+    bekle();
+
+    YavasYaz("Giriş yapmak için enter tuşuna basınız..\n");
+    enterBekle();
+    
+    ekrantemizle();
+
+        YavasYaz("Sisteme giriş yapılıyor...");
+        bekle();
+        ekrantemizle();
+
+        YavasYaz("Sisteme giriş başarılı! Ana menüye yönlendiriliyorsunuz...");
+        bekle();
+        ekrantemizle();
+
 
     return 0;
     
