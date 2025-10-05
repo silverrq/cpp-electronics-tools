@@ -1,0 +1,20 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "C++ Build and Run",
+			"type": "shell",
+			"command": "g++",
+			"args": [
+				"-o",
+				"program",
+				"${file}"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		}
+	]
+}

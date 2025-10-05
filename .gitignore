@@ -1,0 +1,26 @@
+# Compiled executables
+*.exe
+*.out
+*.app
+
+# Object files
+*.o
+*.obj
+
+# Libraries
+*.lib
+*.a
+
+# Visual Studio files
+.vs/
+*.vcxproj
+*.vcxproj.filters
+*.sln
+
+# Temporary files
+*.tmp
+*.temp
+
+# IDE files
+.vscode/launch.json
+.vscode/settings.json
