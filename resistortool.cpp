@@ -37,6 +37,9 @@ int main() {
     
     //Başlangıç mesajı
     YavasYaz("Resistor Calculator'a Hoşgeldiniz!");
+    Sleep(1000);
+    YavasYaz("Giriş yapmak için enter tuşuna basınız.");
 
     return 0;
+    
 }
