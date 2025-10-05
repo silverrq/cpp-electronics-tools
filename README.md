@@ -20,7 +20,7 @@ g++ -o resistortool resistortool.cpp
 - C++11 veya üzeri
 
 ## Geliştirici
-**silverr217** - Elektronik ve yazılım geliştirme projeleri
+**silverr217**
 
 ---
 *Bu proje sürekli geliştirilmektedir. Yeni özellikler eklenecektir.*
