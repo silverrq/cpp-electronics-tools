@@ -75,6 +75,7 @@ void anamenu()  {
 
 }
 
+
 int main() {
 
     turkce(); // Türkçe karakter desteği için fonksiyonu çağır
