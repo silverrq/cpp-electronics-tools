@@ -29,18 +29,6 @@ void ekrantemizle()  {
     }
 } // Ekranı temizleme fonksiyonu
 
-// Menü seçeneklerini yazdırma fonksiyonu
-void printMenu(const char* menu[], int menuSize, int selected) {
-    ekrantemizle();
-    for (int i = 0; i < menuSize; ++i) {
-        if (i == selected) {
-            cout << " > " << menu[i] << endl; // Seçili olanı vurgula
-        } else {
-            cout << "   " << menu[i] << endl;
-        }
-    }
-}
-
 void YavasYaz(const string& text, int delay_ms = 25)  {  // Varsayılan gecikme 25 ms
         for (char karakter: text) {
             cout << karakter << flush; // Karakteri yazdır
