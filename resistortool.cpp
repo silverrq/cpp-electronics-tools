@@ -110,17 +110,15 @@ int main() {
             if(secim == 1)  {
                 ekrantemizle();
                 YavasYaz("4 Bantlı Direnç Hesaplayıcısı seçildi!\n");
-                YavasYaz("Enter'a basın...");
-                cin.ignore();
-                cin.get();
+                YavasYaz("Devam etmek için Enter'a basın...");
+                enterBekle();
                 ekrantemizle();
             }
             else if(secim == 2)  {
                 ekrantemizle();
                 YavasYaz("5 Bantlı Direnç Hesaplayıcısı seçildi!\n");
-                YavasYaz("Enter'a basın...");
-                cin.ignore();
-                cin.get();
+                YavasYaz("Devam etmek için Enter'a basın...");
+                enterBekle();
                 ekrantemizle();
             }
             else if(secim == 3)  {
