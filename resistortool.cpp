@@ -2,6 +2,7 @@
 #include <string> // string sınıfı için
 #include <chrono> // Zaman işlemleri için
 #include <thread> // Uyku işlemi için
+#include <vector> // vector container için
 
 // Windows için konsol kodlama ayarları. Linux/MacOS'ta gerek yok. Türkçe karakterler için.
 #ifdef _WIN32
@@ -12,15 +13,12 @@
 
 using namespace std; // std ad alanını kullan
 
-
-// Konsolun Türkçe karakterleri doğru görüntülemesi için ayar yapan fonksiyon
-
-void turkce() {
+void turkce()  {
     #ifdef _WIN32
         SetConsoleOutputCP(65001); // UTF-8 output
         SetConsoleCP(65001);       // UTF-8 input
     #endif
-}
+} // Türkçe karakter desteği fonksiyonu
 
 void ekrantemizle()  {
     for(int i= 0; i<50; i++) {
@@ -29,7 +27,7 @@ void ekrantemizle()  {
     }
 } // Ekranı temizleme fonksiyonu
 
-void YavasYaz(const string& text, int delay_ms = 25)  {  // Varsayılan gecikme 25 ms
+void YavasYaz(const string& text, int delay_ms = 20)  {  // Varsayılan gecikme 20 ms
         for (char karakter: text) {
             cout << karakter << flush; // Karakteri yazdır
             this_thread::sleep_for(chrono::milliseconds(delay_ms)); // Gecikme
@@ -54,6 +52,27 @@ void enterBekle()  {
 
 void bekle(int milisaniye = 1000) {
     this_thread::sleep_for(chrono::milliseconds(milisaniye));
+    
+}
+
+void anamenu()  {
+
+    YavasYaz("\n\n\n\nAna Menüye Hoşgeldiniz!\n\n\n");
+            
+    bekle();
+    
+            YavasYaz(" Lütfen yapmak istediğiniz işlemi seçiniz:\n");
+            YavasYaz(" 1. 4 Bantlı Direnç Hesaplama için 1 yazınız.\n");
+            YavasYaz(" [████] [████] [████] [████]\n");
+            YavasYaz("  Renk1  Renk2  Renk3  Renk4\n\n");
+            bekle();
+            YavasYaz(" 2. 5 Bantlı Direnç Hesaplama için 2 yazınız.\n");
+            YavasYaz(" [████] [████] [████] [████] [████]\n");
+            YavasYaz("  Renk1  Renk2  Renk3  Renk4  Renk5\n\n");
+            YavasYaz(" 3. Çıkış yapmak için 3 yazınız.\n\n");
+
+            YavasYaz(" Seçiminiz: ");
+
 }
 
 int main() {
@@ -71,12 +90,50 @@ int main() {
     ekrantemizle();
 
         YavasYaz("Sisteme giriş yapılıyor...");
-        bekle();
+        bekle(2000);
         ekrantemizle();
 
         YavasYaz("Sisteme giriş başarılı! Ana menüye yönlendiriliyorsunuz...");
         bekle();
         ekrantemizle();
+
+        int secim;
+
+        anamenu();
+        
+        while(true) {
+
+            cout << endl;
+            cin >> secim;
+
+            if(secim == 1)  {
+                ekrantemizle();
+                YavasYaz("4 Bantlı Direnç Hesaplayıcısı seçildi!\n");
+                YavasYaz("Enter'a basın...");
+                cin.ignore();
+                cin.get();
+                ekrantemizle();
+            }
+            else if(secim == 2)  {
+                ekrantemizle();
+                YavasYaz("5 Bantlı Direnç Hesaplayıcısı seçildi!\n");
+                YavasYaz("Enter'a basın...");
+                cin.ignore();
+                cin.get();
+                ekrantemizle();
+            }
+            else if(secim == 3)  {
+                YavasYaz("Çıkış yapmayı seçtiniz. Program durduruluyor...");
+                bekle(2000);
+                ekrantemizle();
+                break;
+            }
+            else {
+                YavasYaz(" Hatalı girdi yaptınız. Lütfen geçerli bir girdi giriniz.\n\n");
+                YavasYaz(" Seçiminiz: ");
+            }
+        }
+       
 
 
     return 0;
