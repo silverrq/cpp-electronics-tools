@@ -29,6 +29,18 @@ void ekrantemizle()  {
     }
 } // Ekranı temizleme fonksiyonu
 
+// Menü seçeneklerini yazdırma fonksiyonu
+void printMenu(const char* menu[], int menuSize, int selected) {
+    ekrantemizle();
+    for (int i = 0; i < menuSize; ++i) {
+        if (i == selected) {
+            cout << " > " << menu[i] << endl; // Seçili olanı vurgula
+        } else {
+            cout << "   " << menu[i] << endl;
+        }
+    }
+}
+
 void YavasYaz(const string& text, int delay_ms = 25)  {  // Varsayılan gecikme 25 ms
         for (char karakter: text) {
             cout << karakter << flush; // Karakteri yazdır
@@ -56,6 +68,7 @@ void bekle(int milisaniye = 1000) {
     this_thread::sleep_for(chrono::milliseconds(milisaniye));
 }
 
+
 int main() {
 
     turkce(); // Türkçe karakter desteği için fonksiyonu çağır
@@ -71,7 +84,7 @@ int main() {
     ekrantemizle();
 
         YavasYaz("Sisteme giriş yapılıyor...");
-        bekle();
+        bekle(2);
         ekrantemizle();
 
         YavasYaz("Sisteme giriş başarılı! Ana menüye yönlendiriliyorsunuz...");
