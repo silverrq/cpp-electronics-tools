@@ -46,7 +46,7 @@ void enterBekle()  {
         if (input == '\n') {
             validinput = true;
         }else {
-            YavasYaz("\nLutfen sadece enter tusuna basiniz.\n");
+            YavasYaz("\nLütfen sadece Enter tuşuna basınız.\n");
             cin.ignore(1000, '\n'); // Geçersiz girişleri temizle
         }
     } while (!validinput);
