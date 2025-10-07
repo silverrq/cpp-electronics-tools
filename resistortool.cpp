@@ -6,6 +6,14 @@
 #include <algorithm> // transform için
 #include <cctype> // tolower için
 #include <cmath> // pow fonksiyonu için
+#include <conio.h> // _getch() için
+
+// Arrow key navigation sabitleri
+#define YUKARI 72
+#define ASAGI 80
+#define ENTER 13
+#define ESC 27
+#define BILINMEYEN 0
 
 // Windows için konsol kodlama ayarları. Linux/MacOS'ta gerek yok. Türkçe karakterler için.
 #ifdef _WIN32
@@ -59,24 +67,81 @@ void bekle(int milisaniye = 1000) {
     
 }
 
-void anamenu()  {
-
-    YavasYaz("\n\n\n\nAna Menüye Hoşgeldiniz!\n\n\n");
-            
-    bekle();
+// Arrow key navigation için tuş okuma fonksiyonu
+int tusOku() {
+    int karakter = _getch(); // İlk karakter
     
-            YavasYaz(" Lütfen yapmak istediğiniz işlemi seçiniz:\n");
-            YavasYaz(" 1. 4 Bantlı Direnç Hesaplama için 1 yazınız.\n");
-            YavasYaz(" [████] [████] [████] [████]\n");
-            YavasYaz("  Renk1  Renk2  Renk3  Renk4\n\n");
-            bekle();
-            YavasYaz(" 2. 5 Bantlı Direnç Hesaplama için 2 yazınız.\n");
-            YavasYaz(" [████] [████] [████] [████] [████]\n");
-            YavasYaz("  Renk1  Renk2  Renk3  Renk4  Renk5\n\n");
-            YavasYaz(" 3. Çıkış yapmak için 3 yazınız.\n\n");
+    if (karakter == 224) {   // Arrow key başlangıcı (Windows)
+        int ikinci = _getch(); // İkinci karakter
+        if (ikinci == 72) return YUKARI;    // ↑ tuşu
+        if (ikinci == 80) return ASAGI;     // ↓ tuşu
+    }
+    if (karakter == 13) return ENTER;       // Enter tuşu
+    if (karakter == 27) return ESC;         // Esc tuşu
+    
+    return BILINMEYEN; // Tanımlanmamış tuş
+}
 
-            YavasYaz(" Seçiminiz: ");
+// Arrow key menü çizim fonksiyonu
+void menu(int secili) {
+    ekrantemizle();
+    cout << "\n\n\n\nAna Menüye Hoşgeldiniz!\n\n\n";
+    
+    // Seçenek 1 - 4 Bantlı
+    if (secili == 0) {
+        cout << "► 1. 4 Bantlı Direnç Hesaplama\n";  // Seçili
+        cout << "   [████] [████] [████] [████]\n";
+        cout << "    Renk1  Renk2  Renk3  Renk4\n\n";
+    } else {
+        cout << "  1. 4 Bantlı Direnç Hesaplama\n";  // Normal
+        cout << "   [████] [████] [████] [████]\n";
+        cout << "    Renk1  Renk2  Renk3  Renk4\n\n";
+    }
+    
+    // Seçenek 2 - 5 Bantlı  
+    if (secili == 1) {
+        cout << "► 2. 5 Bantlı Direnç Hesaplama\n";  // Seçili
+        cout << "   [████] [████] [████] [████] [████]\n";
+        cout << "    Renk1  Renk2  Renk3  Renk4  Renk5\n\n";
+    } else {
+        cout << "  2. 5 Bantlı Direnç Hesaplama\n";  // Normal
+        cout << "   [████] [████] [████] [████] [████]\n";
+        cout << "    Renk1  Renk2  Renk3  Renk4  Renk5\n\n";
+    }
+    
+    // Seçenek 3 - Çıkış
+    if (secili == 2) {
+        cout << "► 3. Çıkış\n\n";  // Seçili
+    } else {
+        cout << "  3. Çıkış\n\n";  // Normal
+    }
+    
+    cout << "Yukarı/Aşağı ok tuşları: Seçim | Enter: Onayla | Esc: Çıkış\n";
+}
 
+// Arrow key navigation ana fonksiyonu
+int arrowKeyMenu() {
+    int secili = 0;        // Hangi seçenek seçili (0, 1, 2)
+    int toplam = 3;        // Toplam seçenek sayısı
+    
+    while (true) {
+        menu(secili);   // Menüyü çiz
+        
+        int tus = tusOku(); // Tuş bekle
+        
+        if (tus == YUKARI) {
+            secili = (secili - 1 + toplam) % toplam; // Yukarı git (döngüsel)
+        }
+        else if (tus == ASAGI) {
+            secili = (secili + 1) % toplam;          // Aşağı git (döngüsel)
+        }
+        else if (tus == ENTER) {
+            return secili + 1; // 1, 2, veya 3 döndür
+        }
+        else if (tus == ESC) {
+            return 3; // Çıkış seçeneği
+        }
+    }
 }
 
 int renkkodu1 (string b1)  {
@@ -149,12 +214,6 @@ int main() {
 
     string b1, b2, b3, b4, b5, b6; // Bant renkleri değişkenleri
 
-    int band1 = renkkodu1(b1);
-    int band2 = renkkodu2(b2);
-    int band3 = renkkodu3(b3);
-    int band4 = besbandrenkkodu4(b4);
-    int tolerans = renkkodutolerans(b5);
-
 
     turkce(); // Türkçe karakter desteği için fonksiyonu çağır
     ekrantemizle(); //başlangıçta ekranı temizle
@@ -178,13 +237,10 @@ int main() {
 
         int secim;
 
-        anamenu();
+        // Arrow key navigation ile menü
+        secim = arrowKeyMenu();
         
         while(true) {
-
-            cout << endl;
-            cin >> secim;
-            cin.ignore(); // Buffer'daki Enter karakterini temizle!
 
             if(secim == 1)  {
                 ekrantemizle();
@@ -195,42 +251,74 @@ int main() {
 
                 ekrantemizle();
 
-                YavasYaz("4 Bantlı Direncinizin 1. Bandının rengini string olarak giriniz: (Çıkış için q veya Q yazabilirsiniz)\n");
+                YavasYaz("4 Bantlı Direncinizin 1. Bandının rengini string olarak giriniz: (Çıkış için 'q' yazabilirsiniz.)\n");
                 getline(cin, b1);
                 transform(b1.begin(), b1.end(), b1.begin(), ::tolower); // Küçük harfe çevir
+                
+                if(b1 == "q") {
+                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    bekle(2000);
+                    ekrantemizle();
+                    secim = arrowKeyMenu();
+                    continue;
+                }
                 
                 YavasYaz("2. Bandın rengini giriniz:");
                 getline(cin, b2);
                 transform(b2.begin(), b2.end(), b2.begin(), ::tolower);
 
+                if(b2 == "q") {
+                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    bekle(2000);
+                    ekrantemizle();
+                    secim = arrowKeyMenu();
+                    continue;
+                }
+
                 YavasYaz("3. Bandın rengini giriniz:");
                 getline(cin, b3);
                 transform(b3.begin(), b3.end(), b3.begin(), ::tolower); 
+
+
+                if(b3 == "q") {
+                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    bekle(2000);
+                    ekrantemizle();
+                    secim = arrowKeyMenu();
+                    continue;
+                }
 
                 YavasYaz("4. Bandın rengini giriniz:");
                 getline(cin, b5);
                 transform(b5.begin(), b5.end(), b5.begin(), ::tolower); 
 
-                if(b1 == "q" || b1 == "Q" || b2 == "q" || b2 == "Q" || b3 == "q" || b3 == "Q" || b5 == "q" || b5 == "Q")  {
-                    YavasYaz(" Çıkış yapmayı seçtiniz. Program durduruluyor...");
+                if(b5 == "q") {
+                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
-                    break;
+                    secim = arrowKeyMenu();
+                    continue;
                 }
 
                 if (b1.empty() || b2.empty() || b3.empty() || b5.empty()) {
                     YavasYaz(" Hatalı girdi yaptınız. Ana menüye yönlendiriliyorsunuz\n\n");
                     bekle(2000);
                     ekrantemizle();
-                    anamenu();
+                    secim = arrowKeyMenu();
                     continue; // Döngünün başına dön
                 }
+
+                int band1 = renkkodu1(b1);
+                int band2 = renkkodu2(b2);
+                int band3 = renkkodu3(b3);
+                int band4 = besbandrenkkodu4(b4);
+                int tolerans = renkkodutolerans(b5);
 
                 if (band1 == -1 || band2 == -1 || band3 == -1 || tolerans == -1) {
                     YavasYaz(" Hatalı girdi yaptınız. Ana menüye yönlendiriliyorsunuz\n\n");
                     bekle(2000);
                     ekrantemizle();
-                    anamenu();
+                    secim = arrowKeyMenu();
                     continue;
                 }
 
@@ -255,38 +343,72 @@ int main() {
 
                 ekrantemizle();
 
-                YavasYaz("5 Bantlı Direncinizin 1. Bandının rengini string olarak giriniz: (Çıkış için q veya Q yazabilirsiniz)\n");
+                YavasYaz("5 Bantlı Direncinizin 1. Bandının rengini string olarak giriniz: (Çıkış için 'q' yazabilirsiniz.)\n");
                 getline(cin,b1);
                 transform(b1.begin(), b1.end(), b1.begin(), ::tolower); 
+
+                if(b1 == "q")  {
+                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    bekle(2000);
+                    ekrantemizle();
+                    secim = arrowKeyMenu();
+                    continue;
+                }
 
                 YavasYaz("2. Bandın rengini giriniz:");
                 getline(cin,b2);
                 transform(b2.begin(), b2.end(), b2.begin(), ::tolower);
 
+                if(b2 == "q")  {
+                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    bekle(2000);
+                    ekrantemizle();
+                    secim = arrowKeyMenu();
+                    continue;
+                }
+
                 YavasYaz("3. Bandın rengini giriniz:");
                 getline(cin,b3);
                 transform(b3.begin(), b3.end(), b3.begin(), ::tolower);
+
+                if(b3 == "q")   {
+                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    bekle(2000);
+                    ekrantemizle();
+                    secim = arrowKeyMenu();
+                    continue;
+                }
 
                 YavasYaz("4. Bandın rengini giriniz:");
                 getline(cin,b4);
                 transform(b4.begin(), b4.end(), b4.begin(), ::tolower);
 
+                if(b4 == "q")   {
+                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    bekle(2000);
+                    ekrantemizle();
+                    secim = arrowKeyMenu();
+                    continue;
+                }
+
                 YavasYaz("5. Bandın rengini giriniz:");
                 getline(cin,b5);
                 transform(b5.begin(), b5.end(), b5.begin(), ::tolower);
 
-                if(b1 == "q" || b1 == "Q" || b2 == "q" || b2 == "Q" || b3 == "q" || b3 == "Q" || b4 == "q" || b4 == "Q" || b5 == "q" || b5 == "Q")  {
-                    YavasYaz(" Çıkış yapmayı seçtiniz. Program durduruluyor...");
+                if(b5 == "q")   {
+                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
-                    break;
+                    secim = arrowKeyMenu();
+                    continue;
                 }
+
 
                 if (b1.empty() ||b2.empty() || b3.empty() || b4.empty() || b5.empty()) {
                     YavasYaz("Hatalı girdi yaptınız. Ana menüye yönlendiriliyorsunuz\n\n");
                     bekle(2000);
                     ekrantemizle();
-                    anamenu();
+                    secim = arrowKeyMenu();
                     continue;
                 }
 
@@ -300,7 +422,7 @@ int main() {
                     YavasYaz(" Hatalı giriş yaptınız. Ana menüye yönlendiriliyorsunuz.\n\n");
                     bekle(2000);
                     ekrantemizle();
-                    anamenu();
+                    secim = arrowKeyMenu();
                     continue;
                 }
 
@@ -323,11 +445,7 @@ int main() {
                 ekrantemizle();
                 break;
             }
-            if(secim != 1 && secim != 2 && secim != 3) {
-                YavasYaz(" Hatalı girdi yaptınız. Lütfen geçerli bir girdi giriniz.\n\n");
-                YavasYaz(" Seçiminiz: ");
-                continue; // Döngünün başına dön
-            }
+            
         }
        
     return 0;
