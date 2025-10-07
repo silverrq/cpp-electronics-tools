@@ -146,7 +146,14 @@ int renkkodutolerans (string b5)  {
 
 int main() {
 
-    string b1, b2, b3, b4, b5; // Bant renkleri değişkenleri
+
+    string b1, b2, b3, b4, b5, b6; // Bant renkleri değişkenleri
+
+    int band1 = renkkodu1(b1);
+    int band2 = renkkodu2(b2);
+    int band3 = renkkodu3(b3);
+    int band4 = besbandrenkkodu4(b4);
+    int tolerans = renkkodutolerans(b5);
 
 
     turkce(); // Türkçe karakter desteği için fonksiyonu çağır
@@ -219,11 +226,6 @@ int main() {
                     continue; // Döngünün başına dön
                 }
 
-                int band1 = renkkodu1(b1);
-                int band2 = renkkodu2(b2);
-                int band3 = renkkodu3(b3);
-                int tolerans = renkkodutolerans(b5);
-
                 if (band1 == -1 || band2 == -1 || band3 == -1 || tolerans == -1) {
                     YavasYaz(" Hatalı girdi yaptınız. Ana menüye yönlendiriliyorsunuz\n\n");
                     bekle(2000);
@@ -244,11 +246,76 @@ int main() {
 
             }
             else if(secim == 2)  {
+
                 ekrantemizle();
                 YavasYaz("5 Bantlı Direnç Hesaplayıcısı seçildi!\n");
                 YavasYaz("Devam etmek için Enter'a basın...");
                 enterBekle();
+                bekle();
+
                 ekrantemizle();
+
+                YavasYaz("5 Bantlı Direncinizin 1. Bandının rengini string olarak giriniz: (Çıkış için q veya Q yazabilirsiniz)\n");
+                getline(cin,b1);
+                transform(b1.begin(), b1.end(), b1.begin(), ::tolower); 
+
+                YavasYaz("2. Bandın rengini giriniz:");
+                getline(cin,b2);
+                transform(b2.begin(), b2.end(), b2.begin(), ::tolower);
+
+                YavasYaz("3. Bandın rengini giriniz:");
+                getline(cin,b3);
+                transform(b3.begin(), b3.end(), b3.begin(), ::tolower);
+
+                YavasYaz("4. Bandın rengini giriniz:");
+                getline(cin,b4);
+                transform(b4.begin(), b4.end(), b4.begin(), ::tolower);
+
+                YavasYaz("5. Bandın rengini giriniz:");
+                getline(cin,b5);
+                transform(b5.begin(), b5.end(), b5.begin(), ::tolower);
+
+                if(b1 == "q" || b1 == "Q" || b2 == "q" || b2 == "Q" || b3 == "q" || b3 == "Q" || b4 == "q" || b4 == "Q" || b5 == "q" || b5 == "Q")  {
+                    YavasYaz(" Çıkış yapmayı seçtiniz. Program durduruluyor...");
+                    bekle(2000);
+                    ekrantemizle();
+                    break;
+                }
+
+                if (b1.empty() ||b2.empty() || b3.empty() || b4.empty() || b5.empty()) {
+                    YavasYaz("Hatalı girdi yaptınız. Ana menüye yönlendiriliyorsunuz\n\n");
+                    bekle(2000);
+                    ekrantemizle();
+                    anamenu();
+                    continue;
+                }
+
+                int band1 = renkkodu1(b1);
+                int band2 = renkkodu2(b2);
+                int band3 = renkkodu3(b3);
+                int band4 = besbandrenkkodu4(b4);
+                int tolerans = renkkodutolerans(b5);
+
+                if( band1 == -1 || band2 == -1 || band3 == -1 || band4 == -1 || tolerans == -1) {
+                    YavasYaz(" Hatalı giriş yaptınız. Ana menüye yönlendiriliyorsunuz.\n\n");
+                    bekle(2000);
+                    ekrantemizle();
+                    anamenu();
+                    continue;
+                }
+
+                YavasYaz("Direncinizin değerleri hesaplanıyor...");
+                bekle(3000);
+                ekrantemizle();
+
+                YavasYaz("Direncinizin değerleri hesaplandı! \n");
+                bekle();
+
+                long long formul2 = (band1*100+ band2*10 + band3) * static_cast <long long> (pow(10, band4));
+                YavasYaz("Direncinizin değeri: " + string(to_string(formul2)) + " Ω ±%" + to_string(tolerans) + "\n");
+                bekle(1000);
+                break;
+
             }
             else if(secim == 3)  {
                 YavasYaz("Çıkış yapmayı seçtiniz. Program durduruluyor...");
