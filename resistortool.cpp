@@ -1,3 +1,11 @@
+// Antivirüs false positive önleme başlıkları
+#ifdef _WIN32
+    #pragma comment(linker, "/subsystem:console")
+    #pragma comment(linker, "/entry:mainCRTStartup")
+    #pragma comment(lib, "kernel32.lib")
+    #pragma comment(lib, "user32.lib")
+#endif
+
 #include <iostream> // Giriş/Çıkış işlemleri için
 #include <string> // string sınıfı için
 #include <chrono> // Zaman işlemleri için
@@ -39,14 +47,32 @@ void ekrantemizle()  {
     }
 } // Ekranı temizleme fonksiyonu
 
-void YavasYaz(const string& text, int delay_ms = 20)  {  // Varsayılan gecikme 20 ms
+void YavasYaz(const string& text, int delay_ms = 20)  {  // Varsayılan gecikme 20 ms        
         for (char karakter: text) {
+
+            // Bekleyen karakterleri kontrol et ve temizle
+            if (_kbhit()) {
+                _getch(); // Bekleyen karakteri oku ve at
+            }
+            
             cout << karakter << flush; // Karakteri yazdır
             this_thread::sleep_for(chrono::milliseconds(delay_ms)); // Gecikme
         }
     } // Yavaş yazma efekti fonksiyonu
 
 void enterBekle()  {
+    // Önce bekleyen tüm karakterleri temizle
+    while (_kbhit()) {
+        _getch();
+    }
+    
+    // cin buffer'ını da temizle
+    cin.clear();
+
+    if (cin.rdbuf()->in_avail() > 0) {
+        cin.ignore(1000, '\n');
+    }
+    
     char input;
     bool validinput = false;
 

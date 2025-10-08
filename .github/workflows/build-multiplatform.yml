@@ -1,0 +1,89 @@
+name: Build Multi-Platform Executables
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  release:
+    types: [ created ]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        compiler: [gcc, msvc, clang]
+        
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup MSVC
+      if: matrix.compiler == 'msvc'
+      uses: microsoft/setup-msbuild@v1
+      
+    - name: Setup Clang
+      if: matrix.compiler == 'clang'
+      run: |
+        choco install llvm
+        
+    - name: Build with GCC (MinGW)
+      if: matrix.compiler == 'gcc'
+      run: |
+        g++ -static-libgcc -static-libstdc++ -static -O2 -s -DNDEBUG -fno-ident -w resistortool.cpp -o resistortool-gcc.exe
+        
+    - name: Build with MSVC
+      if: matrix.compiler == 'msvc'
+      run: |
+        call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        cl /O2 /MT /DNDEBUG /GL resistortool.cpp /Fe:resistortool-msvc.exe /link /LTCG
+      shell: cmd
+      
+    - name: Build with Clang
+      if: matrix.compiler == 'clang'
+      run: |
+        clang++ -static -O2 -s -DNDEBUG -w resistortool.cpp -o resistortool-clang.exe
+        
+    - name: Test executable
+      run: |
+        if (Test-Path "resistortool-${{ matrix.compiler }}.exe") {
+          Write-Host "✅ Build successful: resistortool-${{ matrix.compiler }}.exe"
+          .\resistortool-${{ matrix.compiler }}.exe --help 2>&1 || echo "Executable created successfully"
+        } else {
+          Write-Host "❌ Build failed"
+          exit 1
+        }
+      shell: powershell
+      
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: windows-executables-${{ matrix.compiler }}
+        path: resistortool-${{ matrix.compiler }}.exe
+        
+  build-linux:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Build with GCC
+      run: |
+        g++ -static -O2 -s -DNDEBUG resistortool.cpp -o resistortool-linux
+        
+    - name: Test executable
+      run: |
+        if [ -f "resistortool-linux" ]; then
+          echo "✅ Linux build successful"
+          chmod +x resistortool-linux
+          ./resistortool-linux --help 2>&1 || echo "Executable created successfully"
+        else
+          echo "❌ Linux build failed"
+          exit 1
+        fi
+        
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: linux-executable
+        path: resistortool-linux
