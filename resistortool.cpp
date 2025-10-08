@@ -351,7 +351,7 @@ int main() {
                 bekle();
                 long long formul = (renkkodu1(b1)*10 + renkkodu2(b2)) * static_cast <long long> (pow(10, renkkodu3(b3)));
                 YavasYaz("Direncinizin değeri: " + to_string(formul) + " Ω ±%" + to_string(renkkodutolerans(b5)) + "\n");
-                bekle(1000);
+                bekle(10000);
                 break;
 
             }
@@ -451,7 +451,7 @@ int main() {
 
                 long long formul2 = (renkkodu1(b1)*100+ renkkodu2(b2)*10 + renkkodu3(b3)) * static_cast <long long> (pow(10, besbandrenkkodu4(b4)));
                 YavasYaz("Direncinizin değeri: " + string(to_string(formul2)) + " Ω ±%" + to_string(renkkodutolerans(b5)) + "\n");
-                bekle(1000);
+                bekle(10000);
                 break;
 
             }
@@ -559,7 +559,7 @@ int main() {
                 bekle();
                 long long formul3 = (renkkodu1(b1)*100 + renkkodu2(b2)*10 + renkkodu3(b3)) * static_cast <long long> (pow(10, besbandrenkkodu4(b4)));
                 YavasYaz("Direncinizin değeri:" + string(to_string(formul3)) + " Ω ±%" + to_string(renkkodutolerans(b5)) + " || Sıcaklık Katsayısı: " + string(to_string(altibandsicaklik(b6))) + " ppm/°C \n");
-                bekle(1000);
+                bekle(10000);
                 break;
 
             }
