@@ -7,12 +7,10 @@
 #include <cctype> // tolower için
 #include <cmath> // pow fonksiyonu için
 #include <conio.h> // _getch() için
-//Windows için konsol kodlama ayarları. Linux/MacOS'ta gerek yok. Türkçe karakterler için.
 #include <windows.h>
 #include <io.h>
 #include <fcntl.h>
 
-// Arrow key navigation sabitleri
 #define YUKARI 72
 #define ASAGI 80
 #define ENTER 13
@@ -20,12 +18,12 @@
 #define BILINMEYEN 0
 
 
-using namespace std; // std ad alanını kullan
+using namespace std;
 
 void turkce()  {
 
-        SetConsoleOutputCP(65001); // UTF-8 output
-        SetConsoleCP(65001);       // UTF-8 input
+        SetConsoleOutputCP(65001);
+        SetConsoleCP(65001);
         
 } // Türkçe karakter desteği fonksiyonu
 
@@ -36,7 +34,7 @@ void ekrantemizle()  {
     }
 } // Ekranı temizleme fonksiyonu
 
-void YavasYaz(const string& text, int delay_ms = 20)  {  // Varsayılan gecikme 20 ms        
+void YavasYaz(const string& text, int delay_ms = 20)  {        
         for (char karakter: text) {
 
             // Bekleyen karakterleri kontrol et ve temizle
@@ -44,37 +42,27 @@ void YavasYaz(const string& text, int delay_ms = 20)  {  // Varsayılan gecikme 
                 _getch(); // Bekleyen karakteri oku ve at
             }
             
-            cout << karakter << flush; // Karakteri yazdır
+            cout << karakter << flush;
             this_thread::sleep_for(chrono::milliseconds(delay_ms)); // Gecikme
         }
     } // Yavaş yazma efekti fonksiyonu
 
 void enterBekle()  {
+
     // Önce bekleyen tüm karakterleri temizle
     while (_kbhit()) {
         _getch();
     }
     
-    // cin buffer'ını da temizle
     cin.clear();
 
-    if (cin.rdbuf()->in_avail() > 0) {
-        cin.ignore(1000, '\n');
+    while(true) {
+
+        int tus = _getch();
+        if (tus == 13) break;
+        while (_kbhit()) _getch(); // Bekleyen karakterleri temizle
     }
-    
-    char input;
-    bool validinput = false;
 
-    do {
-        input = cin.get();
-
-        if (input == '\n') {
-            validinput = true;
-        }else {
-            YavasYaz("\nLütfen sadece Enter tuşuna basınız.\n");
-            cin.ignore(1000, '\n'); // Geçersiz girişleri temizle
-        }
-    } while (!validinput);
 } // Enter tuşuna basılmasını bekleyen fonksiyon
 
 void bekle(int milisaniye = 1000) {
@@ -84,17 +72,17 @@ void bekle(int milisaniye = 1000) {
 
 // Arrow key navigation için tuş okuma fonksiyonu
 int tusOku() {
-    int karakter = _getch(); // İlk karakter
+    int karakter = _getch();
     
-    if (karakter == 224) {   // Arrow key başlangıcı (Windows)
-        int ikinci = _getch(); // İkinci karakter
-        if (ikinci == 72) return YUKARI;    // ↑ tuşu
-        if (ikinci == 80) return ASAGI;     // ↓ tuşu
+    if (karakter == 224) {
+        int ikinci = _getch();
+        if (ikinci == 72) return YUKARI;    
+        if (ikinci == 80) return ASAGI;
     }
-    if (karakter == 13) return ENTER;       // Enter tuşu
-    if (karakter == 27) return ESC;         // Esc tuşu
+    if (karakter == 13) return ENTER;
+    if (karakter == 27) return ESC;
     
-    return BILINMEYEN; // Tanımlanmamış tuş
+    return BILINMEYEN;
 }
 
 // Arrow key menü çizim fonksiyonu
@@ -102,45 +90,45 @@ void menu(int secili) {
     ekrantemizle();
     cout << "\n\n\n\nAna Menüye Hoşgeldiniz!\n\n\n";
     
-    // Seçenek 1 - 4 Bantlı
+   
     if (secili == 0) {
-        cout << "► 1. 4 Bantlı Direnç Hesaplama\n";  // Seçili
+        cout << "► 1. 4 Bantlı Direnç Hesaplama\n";
         cout << "   [████] [████] [████] [████]\n";
         cout << "    Renk1  Renk2  Renk3  Renk4\n\n";
     } else {
-        cout << "  1. 4 Bantlı Direnç Hesaplama\n";  // Normal
+        cout << "  1. 4 Bantlı Direnç Hesaplama\n";
         cout << "   [████] [████] [████] [████]\n";
         cout << "    Renk1  Renk2  Renk3  Renk4\n\n";
     }
     
-    // Seçenek 2 - 5 Bantlı  
+      
     if (secili == 1) {
-        cout << "► 2. 5 Bantlı Direnç Hesaplama\n";  // Seçili
+        cout << "► 2. 5 Bantlı Direnç Hesaplama\n";
         cout << "   [████] [████] [████] [████] [████]\n";
         cout << "    Renk1  Renk2  Renk3  Renk4  Renk5\n\n";
     } else {
-        cout << "  2. 5 Bantlı Direnç Hesaplama\n";  // Normal
+        cout << "  2. 5 Bantlı Direnç Hesaplama\n";
         cout << "   [████] [████] [████] [████] [████]\n";
         cout << "    Renk1  Renk2  Renk3  Renk4  Renk5\n\n";
     }
 
-    // Seçenek 3 - 6 Bantlı
+    
 
     if (secili == 2)  {
-        cout << "► 3. 6 Bantlı Direnç Hesaplama\n";  // Seçili
+        cout << "► 3. 6 Bantlı Direnç Hesaplama\n";
         cout << "   [████] [████] [████] [████] [████] [████]\n";
         cout << "    Renk1  Renk2  Renk3  Renk4  Renk5  Renk6\n\n";
     } else {
-        cout << "  3. 6 Bantlı Direnç Hesaplama\n";  // Normal
+        cout << "  3. 6 Bantlı Direnç Hesaplama\n";
         cout << "   [████] [████] [████] [████] [████] [████]\n";
         cout << "    Renk1  Renk2  Renk3  Renk4  Renk5  Renk6\n\n";
     }
     
-    // Seçenek 3 - Çıkış
+
     if (secili == 3) {
-        cout << "► 4. Çıkış\n\n";  // Seçili
+        cout << "► 4. Çıkış\n\n"; 
     } else {
-        cout << "  4. Çıkış\n\n";  // Normal
+        cout << "  4. Çıkış\n\n"; 
     }
     
     cout << "Yukarı/Aşağı ok tuşları: Seçim | Enter: Onayla | Esc: Çıkış\n";
@@ -149,27 +137,86 @@ void menu(int secili) {
 // Arrow key navigation ana fonksiyonu
 int arrowKeyMenu() {
 
-    int secili = 0;        // Hangi seçenek seçili (0, 1, 2, 3)
-    int toplam = 4;        // Toplam seçenek sayısı (4-band, 5-band, 6-band, çıkış)
+    int secili = 0;   
+    int toplam = 4; 
     
     while (true) {
-        menu(secili);   // Menüyü çiz
+        menu(secili); 
         
-        int tus = tusOku(); // Tuş bekle
+        int tus = tusOku();
         
         if (tus == YUKARI) {
-            secili = (secili - 1 + toplam) % toplam; // Yukarı git (döngüsel)
+            secili = (secili - 1 + toplam) % toplam; // Yukarı git
         }
         else if (tus == ASAGI) {
-            secili = (secili + 1) % toplam;          // Aşağı git (döngüsel)
+            secili = (secili + 1) % toplam;          // Aşağı git
         }
         else if (tus == ENTER) {
-            return secili + 1; // 1, 2, 3, veya 4 döndür
+            return secili + 1;
         }
         else if (tus == ESC) {
-            return 4; // Çıkış seçeneği
+            return 4;
         }
     }
+}
+
+void bilgilendirme4() {
+    
+    cout << "4 Bantlı Direnç Hesaplayıcısı" << endl;
+    cout << "------------------------------" << endl << endl;
+    cout << "Direncinize ait 4 bandın renk kodlarını girerek direncinizin değerini, toleransını öğrenebilirsiniz." << endl << endl;
+    cout << "1. ve 2. bantlar direncin ilk iki basamağını temsil etmektedir." << endl;
+    cout << "3. Bant çarpan değerini temsil etmektedir." << endl;
+    cout << "4. Bant ise tolerans değerini yani değer aralığını temsil etmektedir." << endl;
+    cout << "\nDirenç renklerini sırayla girdikten sonra direncinizin değeri ve değer aralığı hesaplanacaktır." << endl;
+    cout << "Çıkış yapmak isterseniz herhangi bir bant rengini sorarken 'q' tuşuna basabilirsiniz." << endl;
+    
+    YavasYaz("\nLütfen devam etmek için Enter'a basın...");
+    enterBekle();
+}
+
+void bilgilendirme5() {
+    
+    cout << "5 Bantlı Direnç Hesaplayıcısı" << endl;
+    cout << "------------------------------" << endl << endl;
+    cout << "Direncinize ait 5 bandın renk kodlarını girerek direncinizin değerini, toleransını öğrenebilirsiniz." << endl << endl;
+    cout << "1., 2. ve 3. bantlar direncin ilk üç basamağını temsil etmektedir." << endl;
+    cout << "4. Bant çarpan değerini temsil etmektedir." << endl;
+    cout << "5. Bant ise tolerans değerini yani değer aralığını temsil etmektedir." << endl;
+    cout << "\nDirenç renklerini sırayla girdikten sonra direncinizin değeri ve değer aralığı hesaplanacaktır." << endl;
+    cout << "Çıkış yapmak isterseniz herhangi bir bant rengini sorarken 'q' tuşuna basabilirsiniz." << endl;
+
+    YavasYaz("\nLütfen devam etmek için Enter'a basın...");
+    enterBekle();
+}
+
+void bilgilendirme6() {
+    
+    cout << "6 Bantlı Direnç Hesaplayıcısı" << endl;
+    cout << "------------------------------" << endl << endl;
+    cout << "Direncinize ait 6 bandın renk kodlarını girerek direncinizin değerini, toleransını ve sıcaklık katsayısını öğrenebilirsiniz." << endl << endl;
+    cout << "1., 2. ve 3. bantlar direncin ilk üç basamağını temsil etmektedir." << endl;
+    cout << "4. Bant çarpan değerini temsil etmektedir." << endl;
+    cout << "5. Bant ise tolerans değerini yani değer aralığını temsil etmektedir." << endl;
+    cout << "6. Bant ise sıcaklık katsayısını yani direncin sıcaklık değişimine olan duyarlılığını temsil etmektedir." << endl;
+    cout << "\nDirenç renklerini sırayla girdikten sonra direncinizin değeri, toleransı ve sıcaklık katsayısı hesaplanacaktır." << endl;
+    cout << "Çıkış yapmak isterseniz herhangi bir bant rengini sorarken 'q' tuşuna basabilirsiniz." << endl;
+
+    YavasYaz("\nLütfen devam etmek için Enter'a basın...");
+    enterBekle();
+}
+
+void sonbilgilendirme() {
+    YavasYaz("\nProgramı kullandığınız için teşekkürler!\n");
+    YavasYaz("Direncinizin değeri hesaplanan değer aralığının dışındaysa lütfen direncinizin sağlamlığını kontrol ediniz.\n\n");
+    bekle(2000);
+
+    for (int i = 10; i >= 0; --i) {
+        cout << "Program " << i << " saniye içinde kapanacaktır...  \r";
+        cout << flush;
+        bekle(1000);
+    }
+    ekrantemizle();
 }
 
 int renkkodu1 (string b1)  {
@@ -257,14 +304,14 @@ int main() {
     string b1, b2, b3, b4, b5, b6; // Bant renkleri değişkenleri
 
 
-    turkce(); // Türkçe karakter desteği için fonksiyonu çağır
-    ekrantemizle(); //başlangıçta ekranı temizle
+    turkce();
+    ekrantemizle();
 
-    //Başlangıç mesajı
+   
     YavasYaz("Resistor Calculator'a Hoşgeldiniz!\n");
     bekle();
 
-    YavasYaz("Giriş yapmak için enter tuşuna basınız..\n");
+    YavasYaz("Giriş yapmak için enter tuşuna basınız...");
     enterBekle();
     
     ekrantemizle();
@@ -279,7 +326,6 @@ int main() {
 
         int secim;
 
-        // Arrow key navigation ile menü
         secim = arrowKeyMenu();
         
         while(true) {
@@ -287,55 +333,58 @@ int main() {
             if(secim == 1)  {
                 ekrantemizle();
                 YavasYaz("4 Bantlı Direnç Hesaplayıcısı seçildi!\n");
-                YavasYaz("Devam etmek için Enter'a basın...");
+                YavasYaz("Devam etmek için Enter'a basınız...");
                 enterBekle();
                 bekle();
 
                 ekrantemizle();
 
-                YavasYaz("4 Bantlı Direncinizin 1. Bandının rengini string olarak giriniz: (Çıkış için 'q' yazabilirsiniz.)\n");
+                bilgilendirme4();
+                ekrantemizle();
+
+                YavasYaz("Lütfen direncinizin 1. Bandının rengini giriniz: ");
                 getline(cin, b1);
                 transform(b1.begin(), b1.end(), b1.begin(), ::tolower); // Küçük harfe çevir
                 
                 if(b1 == "q") {
-                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
                     secim = arrowKeyMenu();
                     continue;
                 }
                 
-                YavasYaz("2. Bandın rengini giriniz:");
+                YavasYaz("2. Bandın rengini giriniz: ");
                 getline(cin, b2);
                 transform(b2.begin(), b2.end(), b2.begin(), ::tolower);
 
                 if(b2 == "q") {
-                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
                     secim = arrowKeyMenu();
                     continue;
                 }
 
-                YavasYaz("3. Bandın rengini giriniz:");
+                YavasYaz("3. Bandın rengini giriniz: ");
                 getline(cin, b3);
                 transform(b3.begin(), b3.end(), b3.begin(), ::tolower); 
 
 
                 if(b3 == "q") {
-                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
                     secim = arrowKeyMenu();
                     continue;
                 }
 
-                YavasYaz("4. Bandın rengini giriniz:");
+                YavasYaz("4. Bandın rengini giriniz: ");
                 getline(cin, b5);
                 transform(b5.begin(), b5.end(), b5.begin(), ::tolower); 
 
                 if(b5 == "q") {
-                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
                     secim = arrowKeyMenu();
@@ -343,7 +392,7 @@ int main() {
                 }
 
                 if (b1.empty() || b2.empty() || b3.empty() || b5.empty()) {
-                    YavasYaz(" Hatalı girdi yaptınız. Ana menüye yönlendiriliyorsunuz\n\n");
+                    YavasYaz("\nHatalı girdi yaptınız. Ana menüye yönlendiriliyorsunuz\n\n");
                     bekle(2000);
                     ekrantemizle();
                     secim = arrowKeyMenu();
@@ -352,21 +401,24 @@ int main() {
 
 
                 if (renkkodu1(b1) == -1 || renkkodu2(b2) == -1 || renkkodu3(b3) == -1 || renkkodutolerans(b5) == -1) {
-                    YavasYaz(" Hatalı girdi yaptınız. Ana menüye yönlendiriliyorsunuz\n\n");
+                    YavasYaz("\nHatalı girdi yaptınız. Ana menüye yönlendiriliyorsunuz\n\n");
                     bekle(2000);
                     ekrantemizle();
                     secim = arrowKeyMenu();
                     continue;
                 }
 
-                YavasYaz("Direncinizin değerleri hesaplanıyor...");
+                YavasYaz("\nDirencinizin değerleri hesaplanıyor...");
                 bekle(3000);
                 ekrantemizle();
-                YavasYaz("Direncinizin değerleri hesaplandı!\n");
+                YavasYaz("\nDirencinizin değerleri hesaplandı!\n");
                 bekle();
+                ekrantemizle();
+
                 long long formul = (renkkodu1(b1)*10 + renkkodu2(b2)) * static_cast <long long> (pow(10, renkkodu3(b3)));
                 YavasYaz("Direncinizin değeri: " + to_string(formul) + " Ω ±%" + to_string(renkkodutolerans(b5)) + "\n");
-                bekle(10000);
+                YavasYaz("Direncinizin değer aralığı: " + to_string(formul -(formul * renkkodutolerans(b5) /100)) + " Ω - " + to_string(formul + (formul * renkkodutolerans(b5) /100)) + " Ω\n");
+                sonbilgilendirme();
                 break;
 
             }
@@ -379,61 +431,63 @@ int main() {
                 bekle();
 
                 ekrantemizle();
+                bilgilendirme5();
+                ekrantemizle();
 
-                YavasYaz("5 Bantlı Direncinizin 1. Bandının rengini string olarak giriniz: (Çıkış için 'q' yazabilirsiniz.)\n");
+                YavasYaz("Lütfen 5 Bantlı direncinizin 1. Bandının rengini giriniz: ");
                 getline(cin,b1);
                 transform(b1.begin(), b1.end(), b1.begin(), ::tolower); 
 
                 if(b1 == "q")  {
-                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
                     secim = arrowKeyMenu();
                     continue;
                 }
 
-                YavasYaz("2. Bandın rengini giriniz:");
+                YavasYaz("2. Bandın rengini giriniz: ");
                 getline(cin,b2);
                 transform(b2.begin(), b2.end(), b2.begin(), ::tolower);
 
                 if(b2 == "q")  {
-                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
                     secim = arrowKeyMenu();
                     continue;
                 }
 
-                YavasYaz("3. Bandın rengini giriniz:");
+                YavasYaz("3. Bandın rengini giriniz: ");
                 getline(cin,b3);
                 transform(b3.begin(), b3.end(), b3.begin(), ::tolower);
 
                 if(b3 == "q")   {
-                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
                     secim = arrowKeyMenu();
                     continue;
                 }
 
-                YavasYaz("4. Bandın rengini giriniz:");
+                YavasYaz("4. Bandın rengini giriniz: ");
                 getline(cin,b4);
                 transform(b4.begin(), b4.end(), b4.begin(), ::tolower);
 
                 if(b4 == "q")   {
-                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
                     secim = arrowKeyMenu();
                     continue;
                 }
 
-                YavasYaz("5. Bandın rengini giriniz:");
+                YavasYaz("5. Bandın rengini giriniz: ");
                 getline(cin,b5);
                 transform(b5.begin(), b5.end(), b5.begin(), ::tolower);
 
                 if(b5 == "q")   {
-                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
                     secim = arrowKeyMenu();
@@ -442,7 +496,7 @@ int main() {
 
 
                 if (b1.empty() ||b2.empty() || b3.empty() || b4.empty() || b5.empty()) {
-                    YavasYaz("Hatalı girdi yaptınız. Ana menüye yönlendiriliyorsunuz\n\n");
+                    YavasYaz("\nHatalı girdi yaptınız. Ana menüye yönlendiriliyorsunuz\n\n");
                     bekle(2000);
                     ekrantemizle();
                     secim = arrowKeyMenu();
@@ -450,23 +504,24 @@ int main() {
                 }
 
                 if( renkkodu1(b1) == -1 || renkkodu2(b2) == -1 || renkkodu3(b3) == -1 || besbandrenkkodu4(b4) == -1 || renkkodutolerans(b5) == -1) {
-                    YavasYaz(" Hatalı giriş yaptınız. Ana menüye yönlendiriliyorsunuz.\n\n");
+                    YavasYaz("\nHatalı giriş yaptınız. Ana menüye yönlendiriliyorsunuz.\n\n");
                     bekle(2000);
                     ekrantemizle();
                     secim = arrowKeyMenu();
                     continue;
                 }
 
-                YavasYaz("Direncinizin değerleri hesaplanıyor...");
+                YavasYaz("\nDirencinizin değerleri hesaplanıyor...");
                 bekle(3000);
                 ekrantemizle();
 
-                YavasYaz("Direncinizin değerleri hesaplandı! \n");
+                YavasYaz("\nDirencinizin değerleri hesaplandı! \n");
                 bekle();
 
                 long long formul2 = (renkkodu1(b1)*100+ renkkodu2(b2)*10 + renkkodu3(b3)) * static_cast <long long> (pow(10, besbandrenkkodu4(b4)));
                 YavasYaz("Direncinizin değeri: " + string(to_string(formul2)) + " Ω ±%" + to_string(renkkodutolerans(b5)) + "\n");
-                bekle(10000);
+                YavasYaz("Direncinizin değer aralığı: " + to_string(formul2 - (formul2 * renkkodutolerans(b5) / 100)) + " Ω - " + to_string(formul2 + (formul2 * renkkodutolerans(b5) / 100)) + " Ω\n");
+                sonbilgilendirme();
                 break;
 
             }
@@ -480,71 +535,74 @@ int main() {
                 bekle();
                 ekrantemizle();
 
-                YavasYaz("6 Bantlı Direncinizin 1. Bandının rengini string olarak giriniz: (Çıkış için 'q' yazabilirsiniz.)\n");
+                bilgilendirme6();
+                ekrantemizle();
+
+                YavasYaz("Lütfen 6 Bantlı direncinizin 1. Bandının rengini giriniz: ");
                 getline(cin,b1);
                 transform(b1.begin(), b1.end(), b1.begin(), ::tolower);
 
                 if(b1 == "q")  {
-                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
                     secim = arrowKeyMenu();
                     continue;
                 }
 
-                YavasYaz("2. Bandın rengini giriniz:");
+                YavasYaz("2. Bandın rengini giriniz: ");
                 getline(cin,b2);
                 transform(b2.begin(), b2.end(), b2.begin(), ::tolower);
 
                 if(b2 == "q")  {
-                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
                     secim = arrowKeyMenu();
                     continue;
                 }
 
-                YavasYaz("3. Bandın rengini giriniz:");
+                YavasYaz("3. Bandın rengini giriniz: ");
                 getline(cin,b3);
                 transform(b3.begin(), b3.end(), b3.begin(), ::tolower);
                 
                 if(b3 == "q")  {
-                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
                     secim = arrowKeyMenu();
                     continue;
                 }
 
-                YavasYaz("4. Bandın rengini giriniz:");
+                YavasYaz("4. Bandın rengini giriniz: ");
                 getline(cin,b4);
                 transform(b4.begin(), b4.end(), b4.begin(), ::tolower);
 
                 if(b4 == "q")  {
-                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
                     secim = arrowKeyMenu();
                     continue;
                 }
 
-                YavasYaz("5. Bandın rengini giriniz:");
+                YavasYaz("5. Bandın rengini giriniz: ");
                 getline(cin,b5);
                 transform(b5.begin(), b5.end(), b5.begin(), ::tolower);
 
                 if(b5 == "q")  {
-                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
                     secim = arrowKeyMenu();
                     continue;
                 }
 
-                YavasYaz("6. Bandın rengini giriniz:");
+                YavasYaz("6. Bandın rengini giriniz: ");
                 getline(cin,b6);
                 transform(b6.begin(), b6.end(), b6.begin(), ::tolower);
                 if(b6 == "q")  {
-                    YavasYaz(" Çıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
                     secim = arrowKeyMenu();
@@ -552,7 +610,7 @@ int main() {
                 }
 
                 if (b1.empty() || b2.empty() || b3.empty() || b4.empty() || b5.empty() || b6.empty()) {
-                    YavasYaz(" Hatalı girdi yaptınız. Ana menüye yönlendiriliyorsunuz\n\n");
+                    YavasYaz("\nHatalı girdi yaptınız. Ana menüye yönlendiriliyorsunuz\n\n");
                     bekle(2000);
                     ekrantemizle();
                     secim = arrowKeyMenu();
@@ -560,21 +618,22 @@ int main() {
                 }
 
                 if( renkkodu1(b1) == -1 || renkkodu2(b2) == -1 || renkkodu3(b3) == -1 || besbandrenkkodu4(b4) == -1 || renkkodutolerans(b5) == -1 || altibandsicaklik(b6) == -1) {
-                    YavasYaz(" Hatalı giriş yaptınız. Ana menüye yönlendiriliyorsunuz.\n\n");
+                    YavasYaz("\nHatalı giriş yaptınız. Ana menüye yönlendiriliyorsunuz.\n\n");
                     bekle(2000);
                     ekrantemizle();
                     secim = arrowKeyMenu();
                     continue;
                 }
 
-                YavasYaz("Direncinizin değerleri hesaplanıyor...");
+                YavasYaz("\nDirencinizin değerleri hesaplanıyor...");
                 bekle(3000);
                 ekrantemizle();
-                YavasYaz("Direncinizin değerleri hesaplandı! \n");
+                YavasYaz("\nDirencinizin değerleri hesaplandı! \n");
                 bekle();
                 long long formul3 = (renkkodu1(b1)*100 + renkkodu2(b2)*10 + renkkodu3(b3)) * static_cast <long long> (pow(10, besbandrenkkodu4(b4)));
                 YavasYaz("Direncinizin değeri:" + string(to_string(formul3)) + " Ω ±%" + to_string(renkkodutolerans(b5)) + " || Sıcaklık Katsayısı: " + string(to_string(altibandsicaklik(b6))) + " ppm/°C \n");
-                bekle(10000);
+                YavasYaz("Direncinizin değer aralığı: " + to_string(formul3 - (formul3 * renkkodutolerans(b5) / 100)) + " Ω - " + to_string(formul3 + (formul3 * renkkodutolerans(b5) / 100)) + " Ω\n");
+                sonbilgilendirme();
                 break;
 
             }
