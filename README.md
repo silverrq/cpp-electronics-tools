@@ -20,7 +20,7 @@ g++ -o resistortool resistortool.cpp
 - C++
 
 ## Geliştirici
-**silverr217**
+**silverrq**
 
 ---
 *Bu proje sürekli geliştirilmektedir. Yeni özellikler eklenecektir.*
