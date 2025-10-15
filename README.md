@@ -17,7 +17,7 @@ g++ -o resistortool resistortool.cpp
 
 ## Gereksinimler
 - MinGW-w64 (GCC compiler)
-- C++11 veya üzeri
+- C++
 
 ## Geliştirici
 **silverr217**
