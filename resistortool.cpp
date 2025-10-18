@@ -1,4 +1,4 @@
-#include <iostream> // Giriş/Çıkış işlemleri için
+#include <iostream>
 #include <string> // string sınıfı için
 #include <chrono> // Zaman işlemleri için
 #include <thread> // Uyku işlemi için
@@ -34,7 +34,7 @@ void ekrantemizle()  {
     }
 } // Ekranı temizleme fonksiyonu
 
-void YavasYaz(const string& text, int delay_ms = 20)  {        
+void YavasYaz(const string& text, int delay_ms = 10)  {        
         for (char karakter: text) {
 
             // Bekleyen karakterleri kontrol et ve temizle
@@ -206,17 +206,48 @@ void bilgilendirme6() {
     enterBekle();
 }
 
-void sonbilgilendirme() {
-    YavasYaz("\nProgramı kullandığınız için teşekkürler!\n");
-    YavasYaz("Direncinizin değeri hesaplanan değer aralığının dışındaysa lütfen direncinizin sağlamlığını kontrol ediniz.\n\n");
-    bekle(2000);
+string turkceKucukHarfeCevir(string text) {
 
-    for (int i = 10; i >= 0; --i) {
-        cout << "Program " << i << " saniye içinde kapanacaktır...  \r";
-        cout << flush;
-        bekle(1000);
+    for (size_t i = 0; i < text.length(); ++i) {
+        text[i] = tolower(text[i]);
     }
-    ekrantemizle();
+
+    size_t pos = 0;
+    while ((pos = text.find("I", pos)) != string::npos) {
+        text.replace(pos, 1, "ı");
+        pos += 2;
+    }
+    pos = 0;
+    while ((pos = text.find("İ", pos)) != string::npos) {
+        text.replace(pos, 2, "i");
+        pos += 1;
+    }
+    pos = 0;
+    while ((pos = text.find("Ş", pos)) != string::npos) {
+        text.replace(pos, 2, "ş");
+        pos += 2;
+    }
+    pos = 0;
+    while ((pos = text.find("Ğ", pos)) != string::npos) {
+        text.replace(pos, 2, "ğ");
+        pos += 2;
+    }
+    pos = 0;
+    while ((pos = text.find("Ü", pos)) != string::npos) {
+        text.replace(pos, 2, "ü");
+        pos += 2;
+    }
+    pos = 0;
+    while ((pos = text.find("Ö", pos)) != string::npos) {
+        text.replace(pos, 2, "ö");
+        pos += 2;
+    }
+    pos = 0;
+    while ((pos = text.find("Ç", pos)) != string::npos) {
+        text.replace(pos, 2, "ç");
+        pos += 2;
+    }
+    return text;
 }
 
 int renkkodu1 (string b1)  {
@@ -297,9 +328,7 @@ int altibandsicaklik (string b6) {
     else return -1;
 }
 
-
 int main() {
-
 
     string b1, b2, b3, b4, b5, b6; // Bant renkleri değişkenleri
 
@@ -309,7 +338,7 @@ int main() {
 
    
     YavasYaz("Resistor Calculator'a Hoşgeldiniz!\n");
-    bekle();
+    bekle(1000);
 
     YavasYaz("Giriş yapmak için enter tuşuna basınız...");
     enterBekle();
@@ -320,105 +349,141 @@ int main() {
         bekle(2000);
         ekrantemizle();
 
-        YavasYaz("Sisteme giriş başarılı! Ana menüye yönlendiriliyorsunuz...");
-        bekle();
-        ekrantemizle();
-
         int secim;
-
-        secim = arrowKeyMenu();
         
         while(true) {
+            
+            bool anamenuyedonus = false; // bayrak
+            secim = arrowKeyMenu();
 
             if(secim == 1)  {
                 ekrantemizle();
                 YavasYaz("4 Bantlı Direnç Hesaplayıcısı seçildi!\n");
                 YavasYaz("Devam etmek için Enter'a basınız...");
                 enterBekle();
-                bekle();
 
                 ekrantemizle();
 
                 bilgilendirme4();
                 ekrantemizle();
 
-                YavasYaz("Lütfen direncinizin 1. Bandının rengini giriniz: ");
+                YavasYaz("\nLütfen direncinizin 1. Bandının rengini giriniz: ");
+
+                while(true)  {
                 getline(cin, b1);
-                transform(b1.begin(), b1.end(), b1.begin(), ::tolower); // Küçük harfe çevir
-                
-                if(b1 == "q") {
-                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                b1 = turkceKucukHarfeCevir(b1);
+                if(b1 == "q")  {
+                    anamenuyedonus = true;
+                    YavasYaz("\nAna menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
-                    secim = arrowKeyMenu();
-                    continue;
+                    break;
                 }
+
+                if(renkkodu1(b1) == -1)  {
+                    YavasYaz("\nHatalı girdi yaptınız. Lütfen geçerli bir değer giriniz: ");
+                    continue;
+
+                  }else break;
+
+            }if (anamenuyedonus) {continue;} // Ana menüye dön
                 
-                YavasYaz("2. Bandın rengini giriniz: ");
+                
+                YavasYaz("\n\n2. Bandın rengini giriniz: ");
+                while(true)  {
                 getline(cin, b2);
-                transform(b2.begin(), b2.end(), b2.begin(), ::tolower);
-
-                if(b2 == "q") {
-                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                b2 = turkceKucukHarfeCevir(b2);
+                if(b2 == "q")  {
+                    anamenuyedonus = true;
+                    YavasYaz("\nAna menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
-                    secim = arrowKeyMenu();
-                    continue;
+                    break;
                 }
-
-                YavasYaz("3. Bandın rengini giriniz: ");
+    
+                if(renkkodu2(b2) == -1)  {
+                    YavasYaz("\nHatalı girdi yaptınız. Lütfen geçerli bir değer giriniz: ");
+                    continue;
+                  }else break;
+             }if (anamenuyedonus) {continue;}
+                
+                YavasYaz("\n\n3. Bandın rengini giriniz: ");
+                while(true)  {
                 getline(cin, b3);
-                transform(b3.begin(), b3.end(), b3.begin(), ::tolower); 
-
-
-                if(b3 == "q") {
-                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                b3 = turkceKucukHarfeCevir(b3);
+                if(b3 == "q")  {
+                    anamenuyedonus = true;
+                    YavasYaz("\nAna menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
-                    secim = arrowKeyMenu();
-                    continue;
+                    break;
                 }
 
-                YavasYaz("4. Bandın rengini giriniz: ");
+                if(renkkodu3(b3) == -1)  {
+                    YavasYaz("\nHatalı girdi yaptınız. Lütfen geçerli bir değer giriniz: ");
+                    continue;
+                  }else break;
+             }if (anamenuyedonus) {continue;}
+                
+                YavasYaz("\n\n4. Bandın rengini giriniz: ");
+                while(true)  {
                 getline(cin, b5);
-                transform(b5.begin(), b5.end(), b5.begin(), ::tolower); 
+                b5 = turkceKucukHarfeCevir(b5);
 
-                if(b5 == "q") {
-                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                if(b5 == "q")  {
+                    anamenuyedonus = true;
+                    YavasYaz("\nAna menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
-                    secim = arrowKeyMenu();
+                    break;
+                }
+
+                if(renkkodutolerans(b5) == -1)  {
+                    YavasYaz("\nHatalı girdi yaptınız. Lütfen geçerli bir değer giriniz: ");
                     continue;
-                }
+                  }else break;
+                
+            }if (anamenuyedonus) {continue;}
 
-                if (b1.empty() || b2.empty() || b3.empty() || b5.empty()) {
-                    YavasYaz("\nHatalı girdi yaptınız. Ana menüye yönlendiriliyorsunuz\n\n");
-                    bekle(2000);
-                    ekrantemizle();
-                    secim = arrowKeyMenu();
-                    continue; // Döngünün başına dön
-                }
-
-
-                if (renkkodu1(b1) == -1 || renkkodu2(b2) == -1 || renkkodu3(b3) == -1 || renkkodutolerans(b5) == -1) {
-                    YavasYaz("\nHatalı girdi yaptınız. Ana menüye yönlendiriliyorsunuz\n\n");
-                    bekle(2000);
-                    ekrantemizle();
-                    secim = arrowKeyMenu();
-                    continue;
-                }
-
+                ekrantemizle();
                 YavasYaz("\nDirencinizin değerleri hesaplanıyor...");
-                bekle(3000);
+                bekle(1500);
                 ekrantemizle();
                 YavasYaz("\nDirencinizin değerleri hesaplandı!\n");
-                bekle();
+                bekle(1000);
                 ekrantemizle();
 
                 long long formul = (renkkodu1(b1)*10 + renkkodu2(b2)) * static_cast <long long> (pow(10, renkkodu3(b3)));
+                double ana_deger = static_cast<double>(formul);
+                double tolerans_degeri = static_cast<double>(renkkodutolerans(b5));
+                double min_deger = ana_deger - (ana_deger * tolerans_degeri / 100);
+                double max_deger = ana_deger + (ana_deger * tolerans_degeri / 100);
+
                 YavasYaz("Direncinizin değeri: " + to_string(formul) + " Ω ±%" + to_string(renkkodutolerans(b5)) + "\n");
-                YavasYaz("Direncinizin değer aralığı: " + to_string(formul -(formul * renkkodutolerans(b5) /100)) + " Ω - " + to_string(formul + (formul * renkkodutolerans(b5) /100)) + " Ω\n");
-                sonbilgilendirme();
+                YavasYaz("Direncinizin değer aralığı: " + to_string(min_deger) + " Ω - " + to_string(max_deger) + " Ω\n");
+
+                YavasYaz("\nProgramı kullandığınız için teşekkürler!\n");
+                YavasYaz("Ana menüye dönmek için Enter'a, çıkış yapmak için Esc tuşuna basınız...");
+                while(true) {
+                    int tus = _getch();
+                    if (tus == 13) {
+                        anamenuyedonus = true;
+                        ekrantemizle();
+                        YavasYaz("\nAna menüye dönülüyor...");
+                        bekle(2000);
+                        ekrantemizle();
+                        break;
+                    }
+                    else if(tus == 27) {
+                        ekrantemizle();
+                        YavasYaz("\nProgramdan çıkış yapılıyor...");
+                        bekle(2000);
+                        ekrantemizle();
+                        return 0;
+                    }
+
+                }if (anamenuyedonus) {continue;}
+
                 break;
 
             }
@@ -428,100 +493,143 @@ int main() {
                 YavasYaz("5 Bantlı Direnç Hesaplayıcısı seçildi!\n");
                 YavasYaz("Devam etmek için Enter'a basın...");
                 enterBekle();
-                bekle();
 
                 ekrantemizle();
                 bilgilendirme5();
                 ekrantemizle();
 
-                YavasYaz("Lütfen 5 Bantlı direncinizin 1. Bandının rengini giriniz: ");
+                YavasYaz("\nLütfen 5 Bantlı direncinizin 1. Bandının rengini giriniz: ");
+                
+                while(true)  {
                 getline(cin,b1);
-                transform(b1.begin(), b1.end(), b1.begin(), ::tolower); 
-
+                b1 = turkceKucukHarfeCevir(b1);
                 if(b1 == "q")  {
-                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    anamenuyedonus = true;
+                    YavasYaz("\nAna menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
-                    secim = arrowKeyMenu();
-                    continue;
+                    break;
                 }
 
-                YavasYaz("2. Bandın rengini giriniz: ");
+                if(renkkodu1(b1) == -1)  {
+                    YavasYaz("\nHatalı girdi yaptınız. Lütfen geçerli bir değer giriniz: ");
+                    continue;
+                }else break;
+            }if (anamenuyedonus) {continue;}
+
+                YavasYaz("\n\n2. Bandın rengini giriniz: ");
+                while(true)  {
                 getline(cin,b2);
-                transform(b2.begin(), b2.end(), b2.begin(), ::tolower);
-
+                b2 = turkceKucukHarfeCevir(b2);
                 if(b2 == "q")  {
-                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    anamenuyedonus = true;
+                    YavasYaz("\nAna menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
-                    secim = arrowKeyMenu();
-                    continue;
+                    break;
                 }
+                
+                if(renkkodu2(b2) == -1)  {
+                    YavasYaz("\nHatalı girdi yaptınız. Lütfen geçerli bir değer giriniz: ");
+                    continue;
+                }else break;
+            }if (anamenuyedonus) {continue;}
 
-                YavasYaz("3. Bandın rengini giriniz: ");
+                YavasYaz("\n\n3. Bandın rengini giriniz: ");
+                while(true)  {
                 getline(cin,b3);
-                transform(b3.begin(), b3.end(), b3.begin(), ::tolower);
-
-                if(b3 == "q")   {
-                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                b3 = turkceKucukHarfeCevir(b3);
+                if(b3 == "q")  {
+                    anamenuyedonus = true;
+                    YavasYaz("\nAna menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
-                    secim = arrowKeyMenu();
-                    continue;
+                    break;
                 }
+                if(renkkodu3(b3) == -1)  {
+                    YavasYaz("\nHatalı girdi yaptınız. Lütfen geçerli bir değer giriniz: ");
+                    continue;
+                }else break;
+                
+            }if (anamenuyedonus) {continue;}
 
-                YavasYaz("4. Bandın rengini giriniz: ");
+                YavasYaz("\n\n4. Bandın rengini giriniz: ");
+                while(true)  {
                 getline(cin,b4);
-                transform(b4.begin(), b4.end(), b4.begin(), ::tolower);
-
-                if(b4 == "q")   {
-                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                b4 = turkceKucukHarfeCevir(b4);
+                if(b4 == "q")  {
+                    anamenuyedonus = true;
+                    YavasYaz("\nAna menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
-                    secim = arrowKeyMenu();
-                    continue;
+                    break;
                 }
+                if(besbandrenkkodu4(b4) == -1)  {
+                    YavasYaz("\nHatalı girdi yaptınız. Lütfen geçerli bir değer giriniz: ");
+                    continue;
+                }else break;
+                
+            
+            }if (anamenuyedonus) {continue;}
 
-                YavasYaz("5. Bandın rengini giriniz: ");
+                YavasYaz("\n\n5. Bandın rengini giriniz: ");
+                while(true)  {
                 getline(cin,b5);
-                transform(b5.begin(), b5.end(), b5.begin(), ::tolower);
-
-                if(b5 == "q")   {
-                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                b5 = turkceKucukHarfeCevir(b5);
+                if(b5 == "q")  {
+                    anamenuyedonus = true;
+                    YavasYaz("\nAna menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
-                    secim = arrowKeyMenu();
-                    continue;
+                    break;
                 }
-
-
-                if (b1.empty() ||b2.empty() || b3.empty() || b4.empty() || b5.empty()) {
-                    YavasYaz("\nHatalı girdi yaptınız. Ana menüye yönlendiriliyorsunuz\n\n");
-                    bekle(2000);
-                    ekrantemizle();
-                    secim = arrowKeyMenu();
+                if(renkkodutolerans(b5) == -1)  {
+                    YavasYaz("\nHatalı girdi yaptınız. Lütfen geçerli bir değer giriniz: ");
                     continue;
-                }
+                }else break;
+                
+            }if (anamenuyedonus) {continue;}
 
-                if( renkkodu1(b1) == -1 || renkkodu2(b2) == -1 || renkkodu3(b3) == -1 || besbandrenkkodu4(b4) == -1 || renkkodutolerans(b5) == -1) {
-                    YavasYaz("\nHatalı giriş yaptınız. Ana menüye yönlendiriliyorsunuz.\n\n");
-                    bekle(2000);
-                    ekrantemizle();
-                    secim = arrowKeyMenu();
-                    continue;
-                }
-
+                ekrantemizle();
                 YavasYaz("\nDirencinizin değerleri hesaplanıyor...");
-                bekle(3000);
+                bekle(1500);
                 ekrantemizle();
 
                 YavasYaz("\nDirencinizin değerleri hesaplandı! \n");
-                bekle();
+                bekle(1000);
 
-                long long formul2 = (renkkodu1(b1)*100+ renkkodu2(b2)*10 + renkkodu3(b3)) * static_cast <long long> (pow(10, besbandrenkkodu4(b4)));
-                YavasYaz("Direncinizin değeri: " + string(to_string(formul2)) + " Ω ±%" + to_string(renkkodutolerans(b5)) + "\n");
-                YavasYaz("Direncinizin değer aralığı: " + to_string(formul2 - (formul2 * renkkodutolerans(b5) / 100)) + " Ω - " + to_string(formul2 + (formul2 * renkkodutolerans(b5) / 100)) + " Ω\n");
-                sonbilgilendirme();
+                long long formul = (renkkodu1(b1)*100+ renkkodu2(b2)*10 + renkkodu3(b3)) * static_cast <long long> (pow(10, besbandrenkkodu4(b4)));
+                double ana_deger = static_cast<double>(formul);
+                double tolerans_degeri = static_cast<double>(renkkodutolerans(b5));
+                double min_deger = ana_deger - (ana_deger * tolerans_degeri / 100);
+                double max_deger = ana_deger + (ana_deger * tolerans_degeri / 100);
+
+                YavasYaz("Direncinizin değeri: " + string(to_string(formul)) + " Ω ±%" + to_string(renkkodutolerans(b5)) + "\n");
+                YavasYaz("Direncinizin değer aralığı: " + to_string(min_deger) + " Ω - " + to_string(max_deger) + " Ω\n");
+                
+                YavasYaz("\nProgramı kullandığınız için teşekkürler!\n");
+                YavasYaz("Ana menüye dönmek için Enter'a, çıkış yapmak için Esc tuşuna basınız...");
+                while(true) {
+                    int tus = _getch();
+                    if (tus == 13) {
+                        anamenuyedonus = true;
+                        ekrantemizle();
+                        YavasYaz("\nAna menüye dönülüyor...");
+                        bekle(2000);
+                        ekrantemizle();
+                        break;
+                    }
+                    else if(tus == 27) {
+                        ekrantemizle();
+                        YavasYaz("\nProgramdan çıkış yapılıyor...");
+                        bekle(2000);
+                        ekrantemizle();
+                        return 0;
+                    }
+
+                }if (anamenuyedonus) {continue;}
+
+                break;
                 break;
 
             }
@@ -532,108 +640,156 @@ int main() {
                 YavasYaz("6 Bantlı Direnç Hesaplayıcısı seçildi! \n");
                 YavasYaz("Devam etmek için Enter'a basın...");
                 enterBekle();
-                bekle();
                 ekrantemizle();
-
+                
                 bilgilendirme6();
                 ekrantemizle();
 
-                YavasYaz("Lütfen 6 Bantlı direncinizin 1. Bandının rengini giriniz: ");
+                YavasYaz("\nLütfen 6 Bantlı direncinizin 1. Bandının rengini giriniz: ");
+                while(true)  {
                 getline(cin,b1);
-                transform(b1.begin(), b1.end(), b1.begin(), ::tolower);
-
+                b1 = turkceKucukHarfeCevir(b1);
                 if(b1 == "q")  {
-                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    anamenuyedonus = true;
+                    YavasYaz("\nAna menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
-                    secim = arrowKeyMenu();
-                    continue;
+                    break;
                 }
+                if(renkkodu1(b1) == -1)  {
+                    YavasYaz("\nHatalı girdi yaptınız. Lütfen geçerli bir değer giriniz: ");
+                    continue;
+                  }else break;
+             } if (anamenuyedonus) {continue;}
 
-                YavasYaz("2. Bandın rengini giriniz: ");
+                YavasYaz("\n\n2. Bandın rengini giriniz: ");
+                while(true)  {
                 getline(cin,b2);
-                transform(b2.begin(), b2.end(), b2.begin(), ::tolower);
-
+                b2 = turkceKucukHarfeCevir(b2);
                 if(b2 == "q")  {
-                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    anamenuyedonus = true;
+                    YavasYaz("\nAna menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
-                    secim = arrowKeyMenu();
-                    continue;
+                    break;
                 }
-
-                YavasYaz("3. Bandın rengini giriniz: ");
-                getline(cin,b3);
-                transform(b3.begin(), b3.end(), b3.begin(), ::tolower);
+                if(renkkodu2(b2) == -1)  {
+                    YavasYaz("\nHatalı girdi yaptınız. Lütfen geçerli bir değer giriniz: ");
+                    continue;
+                  }else break;
                 
+            }if (anamenuyedonus) {continue;}
+
+                YavasYaz("\n\n3. Bandın rengini giriniz: ");
+                while(true)  {
+                getline(cin,b3);
+                b3 = turkceKucukHarfeCevir(b3);
                 if(b3 == "q")  {
-                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    anamenuyedonus = true;
+                    YavasYaz("\nAna menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
-                    secim = arrowKeyMenu();
-                    continue;
+                    break;
                 }
+                if(renkkodu3(b3) == -1)  {
+                    YavasYaz("\nHatalı girdi yaptınız. Lütfen geçerli bir değer giriniz: ");
+                    continue;
+                  }else break;
+                
+            }if (anamenuyedonus) {continue;}
 
-                YavasYaz("4. Bandın rengini giriniz: ");
+                YavasYaz("\n\n4. Bandın rengini giriniz: ");
+                while(true)  {
                 getline(cin,b4);
-                transform(b4.begin(), b4.end(), b4.begin(), ::tolower);
-
+                b4 = turkceKucukHarfeCevir(b4);
                 if(b4 == "q")  {
-                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    anamenuyedonus = true;
+                    YavasYaz("\nAna menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
-                    secim = arrowKeyMenu();
-                    continue;
+                    break;
                 }
+                if(besbandrenkkodu4(b4) == -1)  {
+                    YavasYaz("\nHatalı girdi yaptınız. Lütfen geçerli bir değer giriniz: ");
+                    continue;
+                  }else break;
+                
+                }if (anamenuyedonus) {continue;}
 
-                YavasYaz("5. Bandın rengini giriniz: ");
+                YavasYaz("\n\n5. Bandın rengini giriniz: ");
+                while(true)  {
                 getline(cin,b5);
-                transform(b5.begin(), b5.end(), b5.begin(), ::tolower);
-
+                b5 = turkceKucukHarfeCevir(b5);
                 if(b5 == "q")  {
-                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    anamenuyedonus = true;
+                    YavasYaz("\nAna menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
-                    secim = arrowKeyMenu();
-                    continue;
+                    break;
                 }
+                if(renkkodutolerans(b5) == -1)  {
+                    YavasYaz("\nHatalı girdi yaptınız. Lütfen geçerli bir değer giriniz: ");
+                    continue;
+                  }else break;
+                
+            }if (anamenuyedonus) {continue;}
 
-                YavasYaz("6. Bandın rengini giriniz: ");
+                YavasYaz("\n\n6. Bandın rengini giriniz: ");
+                while(true)  {
                 getline(cin,b6);
-                transform(b6.begin(), b6.end(), b6.begin(), ::tolower);
+                b6 = turkceKucukHarfeCevir(b6);
                 if(b6 == "q")  {
-                    YavasYaz("\nÇıkış yapmayı seçtiniz. Ana menüye dönülüyor...");
+                    anamenuyedonus = true;
+                    YavasYaz("\nAna menüye dönülüyor...");
                     bekle(2000);
                     ekrantemizle();
-                    secim = arrowKeyMenu();
-                    continue;
+                    break;
                 }
-
-                if (b1.empty() || b2.empty() || b3.empty() || b4.empty() || b5.empty() || b6.empty()) {
-                    YavasYaz("\nHatalı girdi yaptınız. Ana menüye yönlendiriliyorsunuz\n\n");
-                    bekle(2000);
-                    ekrantemizle();
-                    secim = arrowKeyMenu();
+                if(altibandsicaklik(b6) == -1)  {
+                    YavasYaz("\nHatalı girdi yaptınız. Lütfen geçerli bir değer giriniz: ");
                     continue;
-                }
-
-                if( renkkodu1(b1) == -1 || renkkodu2(b2) == -1 || renkkodu3(b3) == -1 || besbandrenkkodu4(b4) == -1 || renkkodutolerans(b5) == -1 || altibandsicaklik(b6) == -1) {
-                    YavasYaz("\nHatalı giriş yaptınız. Ana menüye yönlendiriliyorsunuz.\n\n");
-                    bekle(2000);
-                    ekrantemizle();
-                    secim = arrowKeyMenu();
-                    continue;
-                }
-
+                  }else break;
+                
+            }if (anamenuyedonus) {continue;}
+                
+                ekrantemizle();
                 YavasYaz("\nDirencinizin değerleri hesaplanıyor...");
-                bekle(3000);
+                bekle(1500);
                 ekrantemizle();
                 YavasYaz("\nDirencinizin değerleri hesaplandı! \n");
-                bekle();
-                long long formul3 = (renkkodu1(b1)*100 + renkkodu2(b2)*10 + renkkodu3(b3)) * static_cast <long long> (pow(10, besbandrenkkodu4(b4)));
-                YavasYaz("Direncinizin değeri:" + string(to_string(formul3)) + " Ω ±%" + to_string(renkkodutolerans(b5)) + " || Sıcaklık Katsayısı: " + string(to_string(altibandsicaklik(b6))) + " ppm/°C \n");
-                YavasYaz("Direncinizin değer aralığı: " + to_string(formul3 - (formul3 * renkkodutolerans(b5) / 100)) + " Ω - " + to_string(formul3 + (formul3 * renkkodutolerans(b5) / 100)) + " Ω\n");
-                sonbilgilendirme();
+                bekle(1000);
+                long long formul = (renkkodu1(b1)*100 + renkkodu2(b2)*10 + renkkodu3(b3)) * static_cast <long long> (pow(10, besbandrenkkodu4(b4)));
+                double ana_deger = static_cast<double>(formul);
+                double tolerans_degeri = static_cast<double>(renkkodutolerans(b5));
+                double min_deger = ana_deger - (ana_deger * tolerans_degeri / 100);
+                double max_deger = ana_deger + (ana_deger * tolerans_degeri / 100);
+
+                YavasYaz("Direncinizin değeri:" + string(to_string(formul)) + " Ω ±%" + to_string(renkkodutolerans(b5)) + " || Sıcaklık Katsayısı: " + string(to_string(altibandsicaklik(b6))) + " ppm/°C \n");
+                YavasYaz("Direncinizin değer aralığı: " + to_string(min_deger) + " Ω - " + to_string(max_deger) + " Ω\n");
+                
+                YavasYaz("\nProgramı kullandığınız için teşekkürler!\n");
+                YavasYaz("Ana menüye dönmek için Enter'a, çıkış yapmak için Esc tuşuna basınız...");
+                while(true) {
+                    int tus = _getch();
+                    if (tus == 13) {
+                        anamenuyedonus = true;
+                        ekrantemizle();
+                        YavasYaz("\nAna menüye dönülüyor...");
+                        bekle(2000);
+                        ekrantemizle();
+                        break;
+                    }
+                    else if(tus == 27) {
+                        ekrantemizle();
+                        YavasYaz("\nProgramdan çıkış yapılıyor...");
+                        bekle(2000);
+                        ekrantemizle();
+                        return 0;
+                    }
+
+                }if (anamenuyedonus) {continue;}
+
+                break;
                 break;
 
             }
